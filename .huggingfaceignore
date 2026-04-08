@@ -1,0 +1,16 @@
+venv/
+.venv/
+.openenv/
+outputs/
+test_hf/
+__pycache__/
+*.pyc
+*.pyo
+.git/
+.gitignore
+.dockerignore
+push_output.txt
+check_hf.py
+implementation_plan.md
+task.md
+walkthrough.md

@@ -1,0 +1,17 @@
+venv/
+.venv/
+.openenv/
+outputs/
+test_hf/
+__pycache__/
+
+*.pyc
+*.pyo
+.git/
+.gitignore
+.env
+*.egg-info/
+dist/
+build/
+outputs/
+*.md
