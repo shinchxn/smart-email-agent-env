@@ -28,7 +28,7 @@ HF_TOKEN = os.getenv("HF_TOKEN")
 ENV_URL = os.getenv("ENV_URL", "http://localhost:8000")
 
 # Initialize OpenAI client
-client = OpenAI(base_url=API_BASE_URL, api_key=HF_TOKEN)
+client = OpenAI(base_url=API_BASE_URL, api_key=HF_TOKEN or "dummy")
 
 
 def get_llm_action(obs: EmailObservation) -> EmailAction:

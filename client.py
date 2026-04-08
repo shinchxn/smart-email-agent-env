@@ -6,7 +6,7 @@ the environment server with LLM-based agents.
 """
 
 from openenv_core import EnvClient
-from .models import EmailAction, EmailObservation
+from models import EmailAction, EmailObservation
 
 
 class SmartEmailEnv(EnvClient):
