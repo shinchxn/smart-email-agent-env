@@ -7,7 +7,8 @@ sdk: docker
 pinned: false
 app_port: 8000
 ---
-
+## 🚀 Live Demo
+https://huggingface.co/spaces/Shinchan29/smart-email-agent-env
 # Smart Email Agent Environment
 
 [![OpenEnv Compliant](https://img.shields.io/badge/OpenEnv-Compliant-green)](https://github.com/meta-pytorch/OpenEnv)
