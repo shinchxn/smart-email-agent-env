@@ -17,6 +17,11 @@ app = FastAPI(title="Smart Email Agent Environment")
 _env_instance = SmartEmailAgentEnv()
 
 
+@app.get("/")
+def root():
+    return {"message": "Smart Email Agent API is running"}
+
+
 @app.get("/health")
 def health_check():
     """Health check endpoint for OpenEnv verification."""
