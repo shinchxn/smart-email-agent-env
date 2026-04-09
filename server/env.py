@@ -89,6 +89,29 @@ class SmartEmailAgentEnv:
         self.state_store: Dict[str, EmailState] = {}
         self._current_episode_id: str = str(uuid.uuid4())
         self._active_emails: List[Dict] = []
+        self._total_emails: int = 0
+
+    def _get_normalized_reward(self, raw_cumulative_reward: float) -> float:
+        """
+        Normalizes the raw cumulative reward to a strict (0, 1) range.
+        Maps [-0.2 * total, 1.0 * total] to [0.01, 0.99].
+        """
+        if self._total_emails == 0:
+            return 0.5  # Should not happen in practice
+            
+        # Scale to [-0.2, 1.0] per email
+        per_email_score = raw_cumulative_reward / self._total_emails
+        
+        # Linear mapping: -0.2 -> 0, 1.0 -> 1.0
+        # normalized = (per_email_score - min) / (max - min)
+        # normalized = (per_email_score + 0.2) / 1.2
+        ratio = (per_email_score + 0.2) / 1.2
+        
+        # Clamp ratio to [0, 1]
+        ratio = max(0.0, min(1.0, ratio))
+        
+        # Strict mapping to (0.01, 0.99)
+        return 0.01 + (ratio * 0.98)
 
     def reset(self, task_name: str = "medium_multi_email") -> EmailObservation:
         """Reset the environment state for a specific task."""
@@ -97,6 +120,7 @@ class SmartEmailAgentEnv:
 
         self._current_episode_id = str(uuid.uuid4())
         self._active_emails = self.task_emails[task_name]
+        self._total_emails = len(self._active_emails)
         
         new_state = EmailState(
             episode_id=self._current_episode_id,
@@ -110,7 +134,7 @@ class SmartEmailAgentEnv:
             email_id=first_email["id"],
             remaining_emails_count=len(self._active_emails) - 1,
             last_feedback=f"Environment reset for task: {task_name}",
-            cumulative_reward=0.0,
+            cumulative_reward=self._get_normalized_reward(0.0),
             done=False
         )
 
@@ -179,7 +203,7 @@ class SmartEmailAgentEnv:
                 email_id=-1,
                 remaining_emails_count=0,
                 last_feedback=" | ".join(feedback_parts) + " [DONE]",
-                cumulative_reward=state.cumulative_reward,
+                cumulative_reward=self._get_normalized_reward(state.cumulative_reward),
                 done=True
             )
         
@@ -189,7 +213,7 @@ class SmartEmailAgentEnv:
             email_id=next_email["id"],
             remaining_emails_count=len(self._active_emails) - state.current_email_index - 1,
             last_feedback=" | ".join(feedback_parts),
-            cumulative_reward=state.cumulative_reward,
+            cumulative_reward=self._get_normalized_reward(state.cumulative_reward),
             done=False
         )
 
