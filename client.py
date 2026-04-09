@@ -5,12 +5,18 @@ Implements the mandatory OpenEnv client interface to connect
 the environment server with LLM-based agents.
 """
 
-from openenv_core import EnvClient
+import requests
+from openenv.core import EnvClient
 from models import EmailAction, EmailObservation
 
 
 class SmartEmailEnv(EnvClient):
     """Client for the Smart Email Agent environment."""
+
+    def __init__(self, base_url: str, **kwargs):
+        super().__init__(base_url=base_url, **kwargs)
+        self.url = base_url
+        self.session = requests.Session()
 
     def _parse_result(self, raw_result: dict) -> EmailObservation:
         return EmailObservation(**raw_result)

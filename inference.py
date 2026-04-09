@@ -69,7 +69,7 @@ def get_llm_action(obs: EmailObservation) -> EmailAction:
 
 def run_evaluation(task_name: str):
     """Runs a structured evaluation for a specific task."""
-    env = SmartEmailEnv(url=ENV_URL)
+    env = SmartEmailEnv(base_url=ENV_URL)
     
     # [START] Log
     print(f"[START] task={task_name} env=smart_email_agent_env model={MODEL_NAME}")
